@@ -30,7 +30,7 @@
 
     <groupId>com.github.dov-vlaanderen</groupId>
     <artifactId>geoserver-manager</artifactId>
-    <version>1.8.0</version>
+    <version>1.9-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
