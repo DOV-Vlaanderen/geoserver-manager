@@ -135,6 +135,44 @@ public class HTTPUtils {
 
         return null;
     }
+    
+    /**
+     * Performs an HTTP GET on the given URL. <BR>
+     * Basic auth is used if both username and pw are not null.
+     *
+     * @param url The URL where to connect to.
+     * @param username Basic auth credential. No basic auth if null.
+     * @param pw Basic auth credential. No basic auth if null.
+     * @return The HTTP response as a Stream if the HTTP response code was 200
+     *         (OK).
+     */
+    public static InputStream getAsStream(String url, String username, String pw) {
+
+        GetMethod httpMethod = null;
+        HttpClient client = new HttpClient();
+        HttpConnectionManager connectionManager = client.getHttpConnectionManager();
+        try {
+            setAuth(client, url, username, pw);
+            httpMethod = new GetMethod(url);
+            connectionManager.getParams().setConnectionTimeout(5000);
+            int status = client.executeMethod(httpMethod);
+            if (status == HttpStatus.SC_OK) {
+                return httpMethod.getResponseBodyAsStream();
+            } else {
+                LOGGER.info("(" + status + ") " + HttpStatus.getStatusText(status) + " -- " + url);
+            }
+        } catch (ConnectException e) {
+            LOGGER.info("Couldn't connect to [" + url + "]");
+        } catch (IOException e) {
+            LOGGER.info("Error talking to [" + url + "]", e);
+        } finally {
+            if (httpMethod != null)
+                httpMethod.releaseConnection();
+            connectionManager.closeIdleConnections(0);
+        }
+
+        return null;
+    }
 
     /**
      * Executes a request using the GET method and parses the result as a json object.

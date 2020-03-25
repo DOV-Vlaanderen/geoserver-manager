@@ -25,6 +25,7 @@
 package it.geosolutions.geoserver.rest;
 
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTAbstractManager;
+import it.geosolutions.geoserver.rest.manager.GeoServerRESTResourceManager;
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTStoreManager;
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTStructuredGridCoverageReaderManager;
 import it.geosolutions.geoserver.rest.manager.GeoServerRESTStyleManager;
@@ -56,6 +57,7 @@ public class GeoServerRESTManager extends GeoServerRESTAbstractManager {
     private final GeoServerRESTStructuredGridCoverageReaderManager structuredGridCoverageReader;
     
     private final GeoWebCacheREST geoWebCacheRest;
+    private final GeoServerRESTResourceManager resourceManager;
 
     /**
      * Default constructor.
@@ -78,6 +80,7 @@ public class GeoServerRESTManager extends GeoServerRESTAbstractManager {
         storeManager = new GeoServerRESTStoreManager(restURL, gsuser, gspass);
         styleManager = new GeoServerRESTStyleManager(restURL, gsuser, gspass);
         geoWebCacheRest = new GeoWebCacheREST(restURL, gsuser, gspass);
+        resourceManager = new GeoServerRESTResourceManager(restURL, gsuser, gspass);
     }
 
     /**
@@ -134,6 +137,13 @@ public class GeoServerRESTManager extends GeoServerRESTAbstractManager {
         return geoWebCacheRest;
     }
     
-    
+    /**
+     * <p>Getter for the field <code>structuredGridCoverageReader</code>.</p>
+     *
+     * @return a {@link it.geosolutions.geoserver.rest.manager.GeoServerRESTStructuredGridCoverageReaderManager} object.
+     */
+    public GeoServerRESTResourceManager getResourceManager() {
+        return resourceManager;
+    }
 
 }
