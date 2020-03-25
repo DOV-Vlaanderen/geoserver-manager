@@ -23,6 +23,9 @@
 
 package it.geosolutions.geoserver.rest.encoder;
 
+import java.io.Serializable;
+import java.util.Map;
+
 import it.geosolutions.geoserver.rest.GeoServerRESTPublisher.StoreType;
 import it.geosolutions.geoserver.rest.encoder.utils.NestedElementEncoder;
 
@@ -35,7 +38,7 @@ import it.geosolutions.geoserver.rest.encoder.utils.NestedElementEncoder;
 public class GSGenericStoreEncoder extends GSAbstractStoreEncoder {
 
     private String type;
-
+    
     /**
      * <p>Constructor for GSGenericStoreEncoder.</p>
      *
@@ -48,6 +51,22 @@ public class GSGenericStoreEncoder extends GSAbstractStoreEncoder {
      */
     public GSGenericStoreEncoder(StoreType storeType, String workspace, String type, String storeName, 
             String url, Boolean enabled) {
+        this(storeType, workspace, type, storeName, null, url, enabled);
+    }
+
+    /**
+     * <p>Constructor for GSGenericStoreEncoder.</p>
+     *
+     * @param storeType a {@link it.geosolutions.geoserver.rest.GeoServerRESTPublisher.StoreType} object.
+     * @param workspace a {@link java.lang.String} object.
+     * @param type a {@link java.lang.String} object.
+     * @param storeName a {@link java.lang.String} object.
+     * @param connectionParameters only for feature type stores
+     * @param url a {@link java.lang.String} object.
+     * @param enabled a {@link java.lang.Boolean} object.
+     */
+    public GSGenericStoreEncoder(StoreType storeType, String workspace, String type, String storeName, 
+            Map<String, Serializable> connectionParameters, String url, Boolean enabled) {
         super(storeType, storeName);
         this.type = type;
         if (workspace != null) {
@@ -65,10 +84,13 @@ public class GSGenericStoreEncoder extends GSAbstractStoreEncoder {
         if (url != null) {
             if (storeType == StoreType.COVERAGESTORES) {
                 set("url", url);
-            } else {
-                NestedElementEncoder connectionParameters = new NestedElementEncoder("connectionParameters");
-                connectionParameters.set("url", url.toString());
-                addContent(connectionParameters.getRoot());
+            } else if (connectionParameters != null) {
+                NestedElementEncoder connectionParametersEnc = new NestedElementEncoder("connectionParameters");
+                for (Map.Entry<String, Serializable> kvp : connectionParameters.entrySet()) {
+                    connectionParametersEnc.set(kvp.getKey(), kvp.getValue().toString());
+                }
+                connectionParametersEnc.set("url", url.toString());
+                addContent(connectionParametersEnc.getRoot());
             }
         }
     }
