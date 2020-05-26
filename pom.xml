@@ -30,7 +30,7 @@
 
     <groupId>it.geosolutions</groupId>
     <artifactId>geoserver-manager</artifactId>
-    <version>1.8-dov-0.12</version>
+    <version>1.8-dov-0.13-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
